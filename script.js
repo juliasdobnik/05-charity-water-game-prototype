@@ -14,6 +14,15 @@ const educationValue = document.getElementById('education-value');
 
 const pointsValue = document.getElementById('points-value');
 
+// Get the submit button
+const submitBtn = document.getElementById('submit-btn');
+
+// Get overlay and result message elements
+const resultOverlay = document.getElementById('result-overlay');
+const resultMessage = document.getElementById('result-message');
+const replayBtn = document.getElementById('replay-btn');
+const nextBtn = document.getElementById('next-btn');
+
 // The total points the player can distribute
 const MAX_POINTS = 100;
 
@@ -50,6 +59,13 @@ function updatePoints(changedSlider) {
 
     // Update the points available display
     pointsValue.textContent = MAX_POINTS - totalUsed;
+
+    // Enable the submit button only if all points are used
+    if ((MAX_POINTS - totalUsed) === 0) {
+        submitBtn.disabled = false;
+    } else {
+        submitBtn.disabled = true;
+    }
 }
 
 // Add event listeners to each slider
@@ -98,3 +114,44 @@ function showRandomScenario() {
 
 // Show a random scenario when the page loads
 showRandomScenario();
+
+// When the player clicks Submit Plan
+submitBtn.addEventListener('click', function() {
+    // For now, randomly decide if the plan is correct or not
+    // (You can add your own logic here later)
+    const isCorrect = Math.random() < 0.5;
+    if (isCorrect) {
+        resultMessage.textContent = "Great job! You distributed the water correctly!";
+    } else {
+        resultMessage.textContent = "Oops! The water wasn't distributed correctly. Try again!";
+    }
+    // Show the overlay
+    resultOverlay.style.display = 'flex';
+});
+
+// When the player clicks Replay Level
+replayBtn.addEventListener('click', function() {
+    // Reset all sliders to 0
+    drillingSlider.value = 0;
+    transportSlider.value = 0;
+    filtersSlider.value = 0;
+    educationSlider.value = 0;
+    // Update the display
+    updatePoints(drillingSlider);
+    // Hide the overlay
+    resultOverlay.style.display = 'none';
+    // Show a new random scenario
+    showRandomScenario();
+});
+
+// When the player clicks Go to Next Level
+nextBtn.addEventListener('click', function() {
+    // For now, just reset like replay, but you could add more levels
+    drillingSlider.value = 0;
+    transportSlider.value = 0;
+    filtersSlider.value = 0;
+    educationSlider.value = 0;
+    updatePoints(drillingSlider);
+    resultOverlay.style.display = 'none';
+    showRandomScenario();
+});
