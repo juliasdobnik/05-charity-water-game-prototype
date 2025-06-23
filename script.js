@@ -115,6 +115,60 @@ function showRandomScenario() {
 // Show a random scenario when the page loads
 showRandomScenario();
 
+// List of hints to help players when they lose
+const hints = [
+    "Hint: Try spreading your points more evenly across all projects.",
+    "Hint: Some villages may need more points in Drilling or Filters.",
+    "Hint: Education can be important for long-term clean water.",
+    "Hint: Transport is needed if the water source is far away.",
+    "Hint: Think about what the village's main problem might be."
+];
+
+// Function to show simple fireworks when the player wins
+function showFireworks() {
+    // Get the container for fireworks
+    const container = document.getElementById('fireworks-container');
+    // Colors for the fireworks
+    const colors = ['#FFC907', '#2E9DF7', '#4FCB53', '#FF902A', '#F5402C', '#8BD1CB'];
+    // Get the window size
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    // Create 12 fireworks
+    for (let i = 0; i < 12; i++) {
+        // Create a div for each firework
+        const firework = document.createElement('div');
+        firework.className = 'firework';
+        // Random size and color
+        const size = Math.random() * 24 + 16;
+        firework.style.width = `${size}px`;
+        firework.style.height = `${size}px`;
+        firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+        // Random start position near the center
+        const startX = width / 2 + (Math.random() - 0.5) * 80;
+        const startY = height / 2 + (Math.random() - 0.5) * 80;
+        firework.style.left = `${startX}px`;
+        firework.style.top = `${startY}px`;
+        // Animate to a random direction
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 180 + 80;
+        const endX = startX + Math.cos(angle) * distance;
+        const endY = startY + Math.sin(angle) * distance;
+        // Animate with transition
+        firework.style.transition = 'transform 1s ease-out, opacity 1s';
+        // Add to the container
+        container.appendChild(firework);
+        // Use setTimeout to trigger the animation
+        setTimeout(() => {
+            firework.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`;
+            firework.style.opacity = '0';
+        }, 50);
+        // Remove the firework after animation
+        setTimeout(() => {
+            firework.remove();
+        }, 1200);
+    }
+}
+
 // When the player clicks Submit Plan
 submitBtn.addEventListener('click', function() {
     // For now, randomly decide if the plan is correct or not
@@ -122,8 +176,29 @@ submitBtn.addEventListener('click', function() {
     const isCorrect = Math.random() < 0.5;
     if (isCorrect) {
         resultMessage.textContent = "Great job! You distributed the water correctly!";
+        showFireworks(); // Show fireworks if correct
+        // Remove any previous hint
+        if (document.getElementById('hint-message')) {
+            document.getElementById('hint-message').remove();
+        }
     } else {
         resultMessage.textContent = "Oops! The water wasn't distributed correctly. Try again!";
+        // Pick a random hint
+        const hintText = hints[Math.floor(Math.random() * hints.length)];
+        // Check if a hint already exists and remove it
+        if (document.getElementById('hint-message')) {
+            document.getElementById('hint-message').remove();
+        }
+        // Create a new hint element
+        const hintElem = document.createElement('div');
+        hintElem.id = 'hint-message';
+        hintElem.textContent = hintText;
+        hintElem.style.marginTop = '12px';
+        hintElem.style.color = '#F5402C';
+        hintElem.style.fontSize = '1.1em';
+        hintElem.style.fontWeight = 'bold';
+        // Add the hint below the result message
+        resultMessage.parentNode.insertBefore(hintElem, resultMessage.nextSibling);
     }
     // Show the overlay
     resultOverlay.style.display = 'flex';
