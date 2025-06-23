@@ -70,3 +70,31 @@ educationSlider.addEventListener('input', function() {
 
 // Initialize the display when the page loads
 updatePoints(drillingSlider);
+
+// List of possible scenarios for different villages (no hints about solutions)
+const scenarios = [
+    "A remote village with contaminated water sources.",
+    "A community where children often miss school due to water collection duties.",
+    "A village that experiences frequent water shortages during the dry season.",
+    "A town where waterborne diseases are common.",
+    "A rural area with no nearby clean water wells.",
+    "A village where families walk long distances to fetch water.",
+    "A community struggling with dirty and unsafe drinking water.",
+    "A village affected by seasonal flooding that pollutes water supplies.",
+    "A settlement where most homes lack access to safe water.",
+    "A village where people rely on river water that is not clean."
+];
+
+// Function to pick a random scenario and show it on the page
+function showRandomScenario() {
+    // Pick a random index from the scenarios array
+    const randomIndex = Math.floor(Math.random() * scenarios.length);
+    // Get the scenario text
+    const scenarioText = scenarios[randomIndex];
+    // Find the scenario div and set its text
+    const scenarioDiv = document.getElementById('scenario');
+    scenarioDiv.innerHTML = `<strong>Scenario:</strong> ${scenarioText}`;
+}
+
+// Show a random scenario when the page loads
+showRandomScenario();
